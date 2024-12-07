@@ -13,64 +13,41 @@ welcome() {
 # 显示菜单函数
 show_menu() {
     echo "请选择一个选项:"
-    echo "1. 获取主机名"
-    echo "2. 获取操作系统版本"
-    echo "3. 获取内核版本"
-    echo "4. 获取CPU信息"
-    echo "5. 获取内存使用情况"
-    echo "6. 获取磁盘使用情况"
-    echo "7. 获取所有信息"
-    echo "8. 更新脚本"
-    echo "9. 卸载脚本"
+    echo "1. 获取系统基本信息"
+    echo "2. 更新脚本"
+    echo "3. 卸载脚本"
     echo "0. 退出"
     echo ""
-    read -p "请输入选项 [0-9]: " option
+    read -p "请输入选项 [0-3]: " option
 }
 
-# 定义功能函数
-get_hostname() {
+# 系统基本信息函数
+server_information() {
+    # 获取主机名
     echo "主机名: $(hostname)"
-}
-
-get_os_version() {
-    if [ -f /etc/os-release ]; then
-        source /etc/os-release
-        echo "操作系统版本: $PRETTY_NAME"
-    else
-        echo "无法确定操作系统版本。"
+    
+    # 修改主机名
+    read -p "请输入新的主机名 (留空则不修改): " new_hostname
+    if [ -n "$new_hostname" ]; then
+        echo "正在修改主机名..."
+        sudo hostnamectl set-hostname $new_hostname
+        echo "主机名已修改为 $new_hostname"
     fi
-}
-
-get_kernel_version() {
+    
+    # 获取操作系统版本
+    echo "操作系统版本: $(cat /etc/os-release | grep "PRETTY_NAME" | awk -F'=' '{print $2}' | sed 's/"//g')"
+    
+    # 获取内核版本
     echo "内核版本: $(uname -r)"
-}
-
-get_cpu_info() {
-    cpu_info=$(lscpu | grep "Model name" | awk -F': *' '{print $2}')
-    if [ -z "$cpu_info" ]; then
-        cpu_info=$(lscpu | grep "CPU(s)" | head -n 1 | awk -F': *' '{print $2}' ORS=' ' \
-                   $(lscpu | grep "Model name" | awk -F': *' '{print $2}'))
-    fi
-    echo "CPU 信息: $cpu_info"
-}
-
-get_memory_info() {
-    memory_info=$(free -h | awk '/^Mem:/ {printf "总内存: %s, 已用内存: %s, 空闲内存: %s\n", $2, $3, $4}')
-    echo "$memory_info"
-}
-
-get_disk_info() {
-    disk_info=$(df -h --total | awk 'END{print "磁盘使用情况: 总计: " $2 ", 已用: " $3 ", 可用: " $4}')
-    echo "$disk_info"
-}
-
-get_all_info() {
-    get_hostname
-    get_os_version
-    get_kernel_version
-    get_cpu_info
-    get_memory_info
-    get_disk_info
+    
+    # 获取CPU信息
+    echo "CPU信息: $(lscpu | grep "Model name" | awk -F':' '{print $2}' | sed 's/^ *//')"
+    
+    # 获取内存使用情况
+    echo "内存使用情况: $(free -h | awk '/^Mem:/ {printf "总内存: %s, 已用内存: %s, 空闲内存: %s\n", $2, $3, $4}')"
+    
+    # 获取磁盘使用情况
+    echo "磁盘使用情况: $(df -h | awk '$NF=="/"{printf "总磁盘空间: %s, 已用磁盘空间: %s, 空闲磁盘空间: %s\n", $2, $3, $4}')"
 }
 
 # 更新脚本
@@ -109,15 +86,9 @@ welcome
 while true; do
     show_menu
     case $option in
-        1) get_hostname ;;
-        2) get_os_version ;;
-        3) get_kernel_version ;;
-        4) get_cpu_info ;;
-        5) get_memory_info ;;
-        6) get_disk_info ;;
-        7) get_all_info ;;
-        8) update_script ;;
-        9) uninstall_script ;;
+        1) server_information ;;
+        2) update_script ;;
+        3) uninstall_script ;;
         0) echo "感谢使用，再见！"; exit 0 ;;
         *) echo "无效选项，请重新输入。" ;;
     esac
