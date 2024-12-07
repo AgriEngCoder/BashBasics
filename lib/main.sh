@@ -92,11 +92,12 @@ update_script() {
 # 卸载脚本
 uninstall_script() {
     echo "正在卸载脚本..."
-    # rm -rf 命令删除脚本文件
+    # 使用 rm 命令删除脚本文件
     rm -rf main.sh
     # 检查删除是否成功
     if [ $? -eq 0 ]; then
         echo "脚本卸载成功！"
+        exit 0  # 立即退出脚本
     else
         echo "卸载失败，请手动删除脚本文件。"
     fi
