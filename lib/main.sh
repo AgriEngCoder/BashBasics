@@ -79,7 +79,9 @@ update_script() {
     if [ $? -eq 0 ]; then
         echo "更新脚本下载成功，正在执行更新..."
         # 使用bash 命令执行更新脚本
+    fi
 }
+
 # 卸载脚本
 uninstall_script() {
     echo "正在卸载脚本..."
