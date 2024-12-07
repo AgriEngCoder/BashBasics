@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 欢迎界面函数
-welcome_screen() {
+welcome() {
     clear
     echo "=================================="
     echo "  欢迎来到系统信息获取工具  "
@@ -96,7 +96,7 @@ uninstall_script() {
 }
 
 # 主程序开始
-welcome_screen
+welcome
 
 while true; do
     show_menu
