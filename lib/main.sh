@@ -80,6 +80,18 @@ update_script() {
         echo "更新脚本下载成功，正在执行更新..."
         # 使用bash 命令执行更新脚本
 }
+# 卸载脚本
+uninstall_script() {
+    echo "正在卸载脚本..."
+    # 使用 rm 命令删除脚本文件
+    rm -rf main.sh
+    # 检查删除是否成功
+    if [ $? -eq 0 ]; then
+        echo "脚本卸载成功！"
+    else
+        echo "卸载失败，请手动删除脚本文件。"
+    fi
+}
 
 # 主程序开始
 welcome_screen
@@ -94,6 +106,8 @@ while true; do
         5) get_memory_info ;;
         6) get_disk_info ;;
         7) get_all_info ;;
+        8) update_script ;;
+        9) uninstall_script ;;
         0) echo "感谢使用，再见！"; exit 0 ;;
         *) echo "无效选项，请重新输入。" ;;
     esac
