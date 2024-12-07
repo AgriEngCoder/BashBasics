@@ -25,29 +25,26 @@ show_menu() {
 server_information() {
     # 获取主机名
     echo "主机名: $(hostname)"
-    
-    # 修改主机名
-    read -p "请输入新的主机名 (留空则不修改): " new_hostname
-    if [ -n "$new_hostname" ]; then
-        echo "正在修改主机名..."
-        sudo hostnamectl set-hostname $new_hostname
-        echo "主机名已修改为 $new_hostname"
-    fi
-    
+    # 当前登录用户
+    echo "当前登录用户: $(whoami)"
+    # 获取网口信息
+    echo "网口信息: $(ip a)"
+    # 运行时间
+    echo "运行时间: $(uptime | awk -F'up ' '{print $2}')"
     # 获取操作系统版本
     echo "操作系统版本: $(cat /etc/os-release | grep "PRETTY_NAME" | awk -F'=' '{print $2}' | sed 's/"//g')"
-    
     # 获取内核版本
     echo "内核版本: $(uname -r)"
-    
     # 获取CPU信息
     echo "CPU信息: $(lscpu | grep "Model name" | awk -F':' '{print $2}' | sed 's/^ *//')"
-    
     # 获取内存使用情况
     echo "内存使用情况: $(free -h | awk '/^Mem:/ {printf "总内存: %s, 已用内存: %s, 空闲内存: %s\n", $2, $3, $4}')"
-    
     # 获取磁盘使用情况
     echo "磁盘使用情况: $(df -h | awk '$NF=="/"{printf "总磁盘空间: %s, 已用磁盘空间: %s, 空闲磁盘空间: %s\n", $2, $3, $4}')"
+    # 系统负载
+    echo "系统负载: $(top -bn1 | grep "load average" | awk '{print $10 $11 $12}')"
+    # 防火墙状态
+    echo "防火墙状态: $(ufw status)"
 }
 
 # 更新脚本
