@@ -70,6 +70,16 @@ get_all_info() {
     get_memory_info
     get_disk_info
 }
+# 更新脚本
+update_script() {
+    echo "正在检查更新..."
+    # 使用 wget 或 curl 命令下载更新脚本
+    wget https://raw.githubusercontent.com/AgriEngCoder/BashBasics/main/lib/main.sh
+    # 检查下载是否成功
+    if [ $? -eq 0 ]; then
+        echo "更新脚本下载成功，正在执行更新..."
+        # 使用bash 命令执行更新脚本
+}
 
 # 主程序开始
 welcome_screen
