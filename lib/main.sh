@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 欢迎界面函数
-welcome_screen() {
+welcome() {
     clear
     echo "=================================="
     echo "  欢迎来到系统信息获取工具  "
@@ -20,9 +20,11 @@ show_menu() {
     echo "5. 获取内存使用情况"
     echo "6. 获取磁盘使用情况"
     echo "7. 获取所有信息"
+    echo "8. 更新脚本"
+    echo "9. 卸载脚本"
     echo "0. 退出"
     echo ""
-    read -p "请输入选项 [0-7]: " option
+    read -p "请输入选项 [0-9]: " option
 }
 
 # 定义功能函数
@@ -70,15 +72,20 @@ get_all_info() {
     get_memory_info
     get_disk_info
 }
+
 # 更新脚本
 update_script() {
     echo "正在检查更新..."
     # 使用 wget 或 curl 命令下载更新脚本
-    wget https://raw.githubusercontent.com/AgriEngCoder/BashBasics/main/lib/main.sh
+    wget -O temp_main.sh https://raw.githubusercontent.com/AgriEngCoder/BashBasics/main/lib/main.sh
     # 检查下载是否成功
     if [ $? -eq 0 ]; then
         echo "更新脚本下载成功，正在执行更新..."
-        # 使用bash 命令执行更新脚本
+        chmod +x temp_main.sh
+        ./temp_main.sh
+        rm temp_main.sh
+    else
+        echo "更新失败，请检查网络连接。"
     fi
 }
 
@@ -96,7 +103,7 @@ uninstall_script() {
 }
 
 # 主程序开始
-welcome_screen
+welcome
 
 while true; do
     show_menu
