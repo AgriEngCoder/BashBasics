@@ -7,6 +7,10 @@ welcome() {
     echo "  欢迎来到系统信息获取工具  "
     echo "=================================="
     echo "此工具可以帮助您轻松获取系统的各种信息。"
+    echo"================================"
+    echo "若发现错误，请联系作者邮箱：yh@qs.al。"
+    echo "================================"
+
     echo ""
 }
 
@@ -22,7 +26,7 @@ show_menu() {
 }
 
 # 系统基本信息函数
-server_information() {
+get_server_information() {
     # 获取主机名
     echo "主机名: $(hostname)"
     # 当前登录用户
@@ -46,7 +50,43 @@ server_information() {
     # 防火墙状态
     echo "防火墙状态: $(ufw status)"
 }
-
+# 修改服务器信息函数
+modify_server_information() {
+    #修改主机名
+    read -p "请输入新的主机名: " new_hostname
+    echo "正在修改主机名..."
+    hostnamectl set-hostname $new_hostname
+    echo "主机名修改成功！"
+    # 修改网口信息
+    read -p "请输入新的网口信息: " new_ip
+    echo "正在修改网口信息..."
+    ifconfig eth0 $new_ip
+    echo "网口信息修改成功！"
+}
+# 安装桌面
+install_desktop() {
+    echo"请选择你要安装的桌面程序"
+    echo "1. KDE"
+    echo "2. GNOME"
+    echo "3. XFCE"
+    read -p "请输入选项 [1-3]: " desktop
+    case $desktop in
+        1) echo "正在安装 KDE 桌面..."
+            apt install kde-plasma-desktop -y
+            echo "KDE 桌面安装成功！"
+            ;;
+        2) echo "正在安装 GNOME 桌面..."
+            apt install gnome -y
+            echo "GNOME 桌面安装成功！"
+            ;;
+        3) echo "正在安装 XFCE 桌面..."
+            apt install xfce4 xfce4-goodies -y
+            echo "XFCE 桌面安装成功！"
+            ;;
+        *) echo "无效选项，请重新输入。"
+            ;;
+    esac
+}
 # 更新脚本
 update_script() {
     echo "正在检查更新..."
